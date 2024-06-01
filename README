@@ -1,0 +1,8 @@
+# ord-reqwest
+
+A lightweight HTTP client for ordinals server and runes utility.
+
+## Installation
+`cargo add ord-reqwest`
+
+Or If you're using `Cargo`, just add ord-reqwest to your `Cargo.toml`:
