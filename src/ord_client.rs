@@ -1,6 +1,6 @@
-use ordinals::{RuneId, Terms};
+use ordinals::RuneId;
 use reqwest::{Error, Response};
-use crate::runes::data::rune_entry::RuneResponse;
+use crate::data::rune_entry::RuneResponse;
 
 pub struct OrdClient {
     client: reqwest::Client,
