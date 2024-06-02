@@ -5,6 +5,7 @@ version = "0.1.2"
 edition = "2021"
 description = "A lightweight HTTP client for ordinals server and runes utility"
 license = "MIT"
+repository = "https://github.com/twosatsmaxi/ord-reqwest"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
