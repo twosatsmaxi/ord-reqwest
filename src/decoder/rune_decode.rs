@@ -42,7 +42,7 @@ impl RuneTransactionDecoder {
         return RuneTransaction::TRANSFER(rune.edicts);
     }
 
-    pub fn decode_tx(self, transaction: &Transaction) -> Option<RuneTxDetails> {
+    pub fn decode_tx(&self, transaction: &Transaction) -> Option<RuneTxDetails> {
         let rune_stone = Runestone::decipher(transaction);
         if rune_stone.is_none() {
             return None;
