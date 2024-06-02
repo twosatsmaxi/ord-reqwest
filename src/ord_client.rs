@@ -1,6 +1,9 @@
+use bitcoin::OutPoint;
 use ordinals::RuneId;
 use reqwest::{Error, Response};
+
 use crate::data::rune_entry::RuneResponse;
+use crate::models::ordinals::OutputResponse;
 
 pub struct OrdClient {
     client: reqwest::Client,
@@ -58,5 +61,38 @@ impl OrdClient {
         let block_height =
             serde_json::from_str::<u64>(&api_response.unwrap().text().await.unwrap()).unwrap();
         return block_height;
+    }
+    pub async fn fetch_output(&self, out_point: OutPoint) -> OutputResponse {
+        // fetch output details from ord api using ord base url /output/{tx_id}:{vout}
+        let output_url = format!("{}/output/{}:{}", self.base_api_url, out_point.txid, out_point.vout);
+        // get the response and parse it using serde
+        let api_response = self.do_api_call(&output_url).await;
+        // get the output details from the response serde json it to OutputResponse and get the output details use serdejson
+        let output_response =
+            serde_json::from_str::<OutputResponse>(&api_response.unwrap().text().await.unwrap())
+                .unwrap();
+        return output_response;
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use std::str::FromStr;
+
+    use bitcoin::{OutPoint, Txid};
+
+    use super::*;
+
+    #[tokio::test]
+    #[ignore]
+    async fn fetch_output() {
+        let client = OrdClient::new();
+        let out_point = OutPoint {
+            txid: Txid::from_str("3de0c436d136abfb5f1ec1996d755331f25bf8e424743b1c21e2952fea8ef002").unwrap(),
+            vout: 1
+        };
+        let output_response = client.fetch_output(out_point).await;
+        assert_eq!(output_response.value, 546);
+        assert_eq!(output_response.address, "bc1p90zah9c3hyywydpgnw0gcuk2pwwywj8u7hd0rhhr8kg0x3wl778s4d8h9t");
     }
 }
