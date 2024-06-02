@@ -8,7 +8,7 @@ pub struct RuneEntry {
     pub premine: u128,
     pub divisibility: u16,
     pub number: u128,
-    pub(crate) terms: Option<Terms>,
+    pub terms: Option<Terms>,
 }
 
 impl RuneEntry {
