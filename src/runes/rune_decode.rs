@@ -3,26 +3,26 @@ use std::fmt::Debug;
 use bitcoin::blockdata::transaction::Transaction;
 use ordinals::{Artifact, Edict, Etching, RuneId, Runestone, SpacedRune};
 
-pub(crate) struct EtchingDetails {
-    pub(crate) tx_id: String,
-    pub(crate) rune_name: String,
-    pub(crate) supply: Option<u128>,
-    pub(crate) mintable: bool,
+pub struct EtchingDetails {
+    pub tx_id: String,
+    pub rune_name: String,
+    pub supply: Option<u128>,
+    pub mintable: bool,
 }
-pub(crate) enum RuneTransaction {
+pub enum RuneTransaction {
     ETCHING(EtchingDetails),
     MINT(RuneId),
     TRANSFER(Vec<Edict>),
 }
-pub(crate) struct RuneTxDetails {
-    pub(crate) tx_id: String,
-    pub(crate) rune_tx: RuneTransaction,
+pub struct RuneTxDetails {
+    pub tx_id: String,
+    pub rune_tx: RuneTransaction,
 }
 // dervie copy for RuneTransactionDecoder
 #[derive(Debug, Clone)]
-pub(crate) struct RuneTransactionDecoder {}
+pub struct RuneTransactionDecoder {}
 impl RuneTransactionDecoder {
-    pub(crate) fn new() -> Self {
+    pub fn new() -> Self {
         RuneTransactionDecoder {}
     }
     fn process_etching(tx_id: &String, etching: Etching) -> RuneTransaction {
@@ -56,7 +56,7 @@ impl RuneTransactionDecoder {
         return RuneTransaction::TRANSFER(rune.edicts);
     }
 
-    pub(crate) async fn decode_tx(self, transaction: &Transaction) -> Option<RuneTxDetails> {
+    pub async fn decode_tx(self, transaction: &Transaction) -> Option<RuneTxDetails> {
         let rune_stone = Runestone::decipher(transaction);
         if rune_stone.is_none() {
             return None;
@@ -132,7 +132,7 @@ use bitcoin::consensus::deserialize;
         let runestone = rune_tx_details.rune_tx;
         match runestone {
             RuneTransaction::ETCHING(etching) => {
-                assert_eq!(etching.rune_name, "HOOOOOOOOTERS");
+                assert_eq!(etching.rune_name, "MAOBY•THE•CUTEST•CAT");
             }
             _ => panic!("Expected minted rune"),
         }
