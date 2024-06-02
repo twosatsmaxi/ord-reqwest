@@ -54,7 +54,6 @@ pub struct RuneResponse {
 
 #[cfg(test)]
 mod tests {
-    use crate::runes::data::rune_entry::RuneEntry;
     use super::*;
 
     #[test]

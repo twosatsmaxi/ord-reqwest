@@ -1,23 +1,9 @@
 use std::fmt::Debug;
 
 use bitcoin::blockdata::transaction::Transaction;
-use ordinals::{Artifact, Edict, Etching, RuneId, Runestone, SpacedRune};
+use ordinals::{Artifact, Etching, Runestone, SpacedRune};
+use crate::models::runes::{EtchingDetails, RuneTransaction, RuneTxDetails};
 
-pub struct EtchingDetails {
-    pub tx_id: String,
-    pub rune_name: String,
-    pub supply: Option<u128>,
-    pub mintable: bool,
-}
-pub enum RuneTransaction {
-    ETCHING(EtchingDetails),
-    MINT(RuneId),
-    TRANSFER(Vec<Edict>),
-}
-pub struct RuneTxDetails {
-    pub tx_id: String,
-    pub rune_tx: RuneTransaction,
-}
 // dervie copy for RuneTransactionDecoder
 #[derive(Debug, Clone)]
 pub struct RuneTransactionDecoder {}
@@ -79,12 +65,11 @@ impl RuneTransactionDecoder {
 
 #[cfg(test)]
 mod tests {
-    use crate::runes::data::transaction::RUNE_BUY_TX;
-use crate::runes::data::transaction::SIGNET_RUNE_TX;
-use bitcoin::consensus::deserialize;
+    use bitcoin::consensus::deserialize;
     use hex::decode as hex_decode;
-    use crate::runes::data::transaction::{NON_RUNE_TX, RUNE_REVEAL_TX_HEX};
+    use crate::data::transaction::{NON_RUNE_TX, RUNE_BUY_TX, RUNE_REVEAL_TX_HEX, SIGNET_RUNE_TX};
 
+    use crate::models::runes::RuneTransaction;
 
     use super::*;
 
