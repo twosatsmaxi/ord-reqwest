@@ -716,6 +716,8 @@ dependencies = [
 name = "ord-reqwest"
 version = "0.1.0"
 dependencies = [
+ "bitcoin",
+ "hex",
  "ordinals",
  "reqwest",
  "serde",
