@@ -3,6 +3,7 @@ use ordinals::RuneId;
 use reqwest::{Error, Response};
 
 use crate::data::rune_entry::RuneResponse;
+use crate::models::address::AddressResponse;
 use crate::models::ordinals::OutputResponse;
 
 pub struct OrdClient {
@@ -73,6 +74,16 @@ impl OrdClient {
                 .unwrap();
         return output_response;
     }
+    pub async fn get_address(&self, address: &str) -> AddressResponse {
+        // fetch address details from ord api using ord base url /address/{address}
+        let address_url = format!("{}/address/{}", self.base_api_url, address);
+        // get the response and parse it using serde
+        let api_response = self.do_api_call(&address_url).await;
+        // get the address details from the response serde json it to AddressResponse and get the address details use serdejson
+        let address_response = api_response.unwrap().text().await.unwrap();
+        let address_response: AddressResponse = serde_json::from_str(&address_response).unwrap();
+        address_response
+    }
 }
 
 #[cfg(test)]
@@ -80,7 +91,7 @@ mod tests {
     use std::str::FromStr;
 
     use bitcoin::{OutPoint, Txid};
-
+    use crate::models::address::AddressResponse;
     use super::*;
 
     #[tokio::test]
@@ -94,5 +105,14 @@ mod tests {
         let output_response = client.fetch_output(out_point).await;
         assert_eq!(output_response.value, 546);
         assert_eq!(output_response.address, "bc1p90zah9c3hyywydpgnw0gcuk2pwwywj8u7hd0rhhr8kg0x3wl778s4d8h9t");
+    }
+
+    #[tokio::test]
+    #[ignore]
+    async fn fetch_address_details() {
+        let client = OrdClient::new();
+        let address = "bc1pk244ecgfnyurjdj43qh9ha95laff32aa5w7fmscjtt93fkresymqpf8rgz";
+        let address_response: AddressResponse = client.get_address(address).await;
+        assert!(address_response.inscriptions.len() > 0);
     }
 }
