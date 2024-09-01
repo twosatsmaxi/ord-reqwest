@@ -95,4 +95,14 @@ mod tests {
         assert_eq!(output_response.value, 546);
         assert_eq!(output_response.address, "bc1p90zah9c3hyywydpgnw0gcuk2pwwywj8u7hd0rhhr8kg0x3wl778s4d8h9t");
     }
+
+    #[tokio::test]
+    #[ignore]
+    async fn fetch_address_details() {
+        let client = OrdClient::new();
+        let address = "bc1pk244ecgfnyurjdj43qh9ha95laff32aa5w7fmscjtt93fkresymqpf8rgz";
+        let address_wallets_url = format!("{}/address/{}", client.base_api_url, address);
+        let address_response: AddressResponse = client.get_address(&address_wallets_url).await;
+        asser!(address_response.inscriptions.len() > 0);
+    }
 }
