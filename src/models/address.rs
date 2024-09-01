@@ -62,7 +62,7 @@ mod tests {
                   "runes_balances": [
                     [
                       "SAIKO•HAMSTER",
-                      10150,
+                      "10150",
                       "🐹"
                     ]
                   ]
@@ -70,5 +70,10 @@ mod tests {
                 "#;
         let address_response: AddressResponse = serde_json::from_str(json_data).unwrap();
         assert_eq!(address_response.sat_balance, 809009);
+        assert_eq!(address_response.outputs, vec!["ab"]);
+        assert_eq!(address_response.inscriptions, vec!["jkjlk"]);
+        assert_eq!(address_response.runes_balances[0].rune_name, "SAIKO•HAMSTER");
+        assert_eq!(address_response.runes_balances[0].balance, 10150.0);
+        assert_eq!(address_response.runes_balances[0].rune_symbol, "🐹");
     }
 }
