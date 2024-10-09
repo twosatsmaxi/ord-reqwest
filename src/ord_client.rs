@@ -18,7 +18,7 @@ impl OrdClient {
             std::env::var("ORD_BASE_URL").unwrap_or("http://192.168.29.108:4000".to_string());
         let ord_public_url =
             std::env::var("ORD_PUBLIC_URL").unwrap_or("https://ordinals.com".to_string());
-        let client = reqwest::Client::new();
+        let client = reqwest::Client::builder().timeout(std::time::Duration::from_secs(10)).build().unwrap();
         OrdClient {
             client,
             base_api_url: ord_base_url,
