@@ -33,7 +33,7 @@ where
     deserializer.deserialize_any(StringOrNumberVisitor)
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct RuneBalance {
     pub rune_name: String,
     #[serde(deserialize_with = "string_or_number")]
