@@ -2,7 +2,7 @@ use std::fmt;
 use serde::{de, Deserialize, Deserializer, Serialize};
 use serde::de::Visitor;
 
-fn string_or_number<'de, D>(deserializer: D) -> Result<f64, D::Error>
+pub fn string_or_number<'de, D>(deserializer: D) -> Result<f64, D::Error>
 where
     D: Deserializer<'de>,
 {
