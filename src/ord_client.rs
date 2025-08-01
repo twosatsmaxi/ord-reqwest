@@ -1,7 +1,7 @@
 use bitcoin::OutPoint;
 use ordinals::RuneId;
 use reqwest::{Error, Response};
-
+use serde::{Deserialize, Serialize};
 use crate::data::rune_entry::RuneResponse;
 use crate::models::address::AddressResponse;
 use crate::models::ordinals::OutputResponse;
@@ -12,6 +12,11 @@ pub struct OrdClient {
     pub base_public_url: String,
 }
 
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub struct InscriptionResponse {
+    pub address: String,
+    pub id: String,
+}
 impl OrdClient {
     pub fn new() -> Self {
         let ord_base_url =
@@ -50,7 +55,7 @@ impl OrdClient {
         let rune_response =
             serde_json::from_str::<RuneResponse>(&api_response.unwrap().text().await.unwrap())
                 .unwrap();
-        return rune_response;
+        rune_response
     }
 
     pub async fn fetch_latest_block_height(&self) -> u64 {
@@ -84,14 +89,16 @@ impl OrdClient {
         let address_response: AddressResponse = serde_json::from_str(&address_response).unwrap();
         address_response
     }
-    
-    pub async fn get_inscription(&self, inscription_id: &str) -> Result<String, Error> {
+
+    pub async fn get_inscription(&self, inscription_id: &str) -> InscriptionResponse {
         // fetch inscription details from ord api using ord base url /inscription/{inscription_id}
         let inscription_url = format!("{}/inscription/{}", self.base_api_url, inscription_id);
         // get the response and parse it using serde
-        let api_response = self.do_api_call(&inscription_url).await?;
-        // return the text of the response
-        Ok(api_response.text().await?)
+        let api_response = self.do_api_call(&inscription_url).await.unwrap();
+        // parse the JSON response to InscriptionResponse
+        let inscription_text = api_response.text().await.unwrap();
+        let inscription_response: InscriptionResponse = serde_json::from_str(&inscription_text).unwrap();
+        inscription_response
     }
 }
 
@@ -124,7 +131,7 @@ mod tests {
         let address_response: AddressResponse = client.get_address(address).await;
         assert!(address_response.inscriptions.len() > 0);
     }
-    
+
     #[tokio::test]
     #[ignore]
     async fn fetch_latest_block_height() {
@@ -132,15 +139,14 @@ mod tests {
         let block_height = client.fetch_latest_block_height().await;
         assert!(block_height > 0);
     }
-    
+
     #[tokio::test]
     #[ignore]
     async fn fetch_inscription_details() {
         let client = OrdClient::new();
         let inscription_id = "9f7e2a095aa6773b4be7673f447fb2285f85fefb845e5d5cd06a38e2a1d0ae5di0";
         let inscription_details = client.get_inscription(inscription_id).await;
-        assert!(inscription_details.is_ok());
-        let details = inscription_details.unwrap();
-        assert!(details.contains("9f7e2a095aa6773b4be7673f447fb2285f85fefb845e5d5cd06a38e2a1d0ae5di0"));
+        let details = inscription_details;
+        assert_eq!(details.id, inscription_id);
     }
 }
