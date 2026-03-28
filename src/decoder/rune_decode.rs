@@ -47,7 +47,7 @@ impl RuneTransactionDecoder {
         if rune_stone.is_none() {
             return None;
         }
-        let txid = &transaction.txid().to_string();
+        let txid = &transaction.compute_txid().to_string();
         let rune_stone = rune_stone.unwrap();
         match rune_stone {
             Artifact::Runestone(rune) => {
