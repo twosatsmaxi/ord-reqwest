@@ -144,7 +144,7 @@ mod tests {
     #[ignore]
     async fn fetch_inscription_details() {
         let client = OrdClient::new();
-        let inscription_id = "9f7e2a095aa6773b4be7673f447fb2285f85fefb845e5d5cd06a38e2a1d0ae5di0";
+        let inscription_id = "0dc34a21a53600106e9c91d7c8d4b84a62a14dbd4b58cad66272dc3bbc8dbdd7i0";
         let inscription_details = client.get_inscription(inscription_id).await;
         let details = inscription_details;
         assert_eq!(details.id, inscription_id);

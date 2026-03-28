@@ -5,7 +5,6 @@ use serde::{Deserialize, Serialize};
 pub struct OutputResponse {
     pub address: String,
     pub inscriptions: Vec<String>,
-    pub runes: HashMap<String, Rune>,
     pub transaction: String,
     pub value: u64,
 }
@@ -77,6 +76,5 @@ mod tests {
         let output_response: OutputResponse = serde_json::from_str(output_response).unwrap();
         assert_eq!(output_response.value, 546);
         assert_eq!(output_response.address, "bc1ppq9v5r7cu7w9nc408jyucvtpl2wnnw7kcdfu425z0f0e35f4h5yswtykl3");
-        assert_eq!(output_response.runes["KODA•FLUFFINGTON"].amount, 7151041666667.0);
     }
 }
